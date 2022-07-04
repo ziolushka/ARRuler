@@ -56,11 +56,11 @@
 			isa = PBXGroup;
 			children = (
 				90A1FE132873744000D1D4FC /* AppDelegate.swift */,
-				90A1FE152873744000D1D4FC /* art.scnassets */,
 				90A1FE172873744000D1D4FC /* ViewController.swift */,
 				90A1FE192873744000D1D4FC /* Main.storyboard */,
-				90A1FE1C2873744100D1D4FC /* Assets.xcassets */,
 				90A1FE1E2873744100D1D4FC /* LaunchScreen.storyboard */,
+				90A1FE1C2873744100D1D4FC /* Assets.xcassets */,
+				90A1FE152873744000D1D4FC /* art.scnassets */,
 			);
 			path = "AI 2022 AR Ruler";
 			sourceTree = "<group>";
