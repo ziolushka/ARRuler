@@ -36,19 +36,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         // Pause the view's session
         sceneView.session.pause()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         removeOldDotNodesIfNeeded()
         removeOldTextNodeIfNeeded()
-        
+        //We want to get current location of the receiver in the coordinate system (2D screen coordinates of point where user tapped)
         if let touchLocation = touches.first?.location(in: sceneView) {
+            // ARKit creates a ray that extends in the positive z-direction from the argument screen space point, to determine if any of the argument targets exist in the physical environment anywhere along the ray.
+            // That's the ray you create from a screen point you're interested in.
             if let query = sceneView.raycastQuery(from: touchLocation, allowing: .existingPlaneGeometry, alignment: .any) {
-                
+                // Ray casting provides a 3D location in physical space that corresponds to a given 2D location on the screen. An array of ray-cast results, sorted from nearest to furthest from the camera.
                 if let result = sceneView.session.raycast(query).first {
                     addDotNode(at: result)
                 }
@@ -71,14 +71,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func addDotNode(at hitResult : ARRaycastResult) {
+    func addDotNode(at raycastResult : ARRaycastResult) {
         let dotGeometry = SCNSphere(radius: 0.005)
         dotGeometry.firstMaterial?.diffuse.contents = UIColor(named: "AccentColor")
         
         let dotNode = SCNNode(geometry: dotGeometry)
-        dotNode.position = SCNVector3(hitResult.worldTransform.columns.3.x,
-                                      hitResult.worldTransform.columns.3.y,
-                                      hitResult.worldTransform.columns.3.z)
+        dotNode.position = SCNVector3(raycastResult.worldTransform.columns.3.x,
+                                      raycastResult.worldTransform.columns.3.y,
+                                      raycastResult.worldTransform.columns.3.z)
         
         sceneView.scene.rootNode.addChildNode(dotNode)
         dotNodes.append(dotNode)
@@ -90,6 +90,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func calculateDistance() {
         if let start = dotNodes.first, let end = dotNodes.last {
+            
+            // Formula for calculeting distance between two points in 3D space
             // distance = √ ((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
             let distance = sqrt(pow(end.position.x - start.position.x, 2) +
                                 pow(end.position.y - start.position.y, 2) +
@@ -106,7 +108,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         textNode = SCNNode(geometry: textGeometry)
         textNode.position = SCNVector3(position.x, position.y + 0.01, position.z)
-        textNode.scale = SCNVector3(0.0025, 0.0025, 0.0025)
+        textNode.scale = SCNVector3(0.0025, 0.0025, 0.0025) //Scaled the text node to fit the screen of device
         
         sceneView.scene.rootNode.addChildNode(textNode)
         
